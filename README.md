@@ -43,6 +43,11 @@ Finally activate the service
 ```
 ln -s /data/venus.dbus-twc3/service /service/venus.dbus-twc3
 ```
+If you are on Venus OS 2.9+ this line needs to be added to
+[/data/rc.local](see https://www.victronenergy.com/live/ccgx:root_access)
+as well.
+
+Create the file if it does not exist.
 
 
 ## Possible improvements
