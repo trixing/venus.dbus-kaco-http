@@ -18,7 +18,7 @@ import traceback
 
 import dbus
 
-sys.path.insert(1, os.path.join(os.path.dirname(__file__), '../venus.dbus-trixing-template'))
+sys.path.insert(1, os.path.join(os.path.dirname(__file__), '../venus.dbus-trixing-lib'))
 
 import dbus_trixing_template as dbus_trixing
 
