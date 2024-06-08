@@ -1,55 +1,53 @@
-# Venus OS Driver for Tesla Wall Connector 3 (TWC3)
+# Venus OS Driver for Kaco NX3 Inverters using HTTP protocol
 
-This program regularly polls a Tesla Wall Connector 3 on the
-local network and creates a dbus device for an AC charging
-station.
+This program regularly polls a Kaco NX3 inverter via HTTP
+local network and creates several dbus devices for it:
 
-The charging station will only show up properly in the GX remote
-control window as no visualization is provided by Victron in
-the VRM portal.
+- One PV inverter per string, this allows monitoring of
+  power of individual strings.
 
-To still show the status the driver creates a secondary
-temperature device which is used to communiate the state of
-the wallbox.
+- One temperature device.
 
-There is no control logic part of this driver. This is just
-providing the data on the dbus.
+I have found the HTTP method to be more reliable and stable
+than the modbus polling.
+
+Caveats with exposing per string inverters is that the energy
+produces is just split in equal parts as the inverter isn't
+able to track per-mppt energy production. That means that
+instantanous power production will be accurate but history
+energy wrong. There is no easy fix for this unfortunately.
 
 ## Installation (Supervise)
 
 If you want to run the script on the GX device, proceed like
-this 
+this
 ```
 cd /data/
-git clone http://github.com/trixing/venus.dbus-twc3
-chmod +x /data/venus.dbus-twc3/service/run
-chmod +x /data/venus.dbus-twc3/service/log/run
-```
-
-If you are on Venus OS < 2.80 you need to also install the
-python3 libraries:
-```
-opkg install python3 python3-requests
+git clone http://github.com/trixing/venus.dbus-trixing-lib
+git clone http://github.com/trixing/venus.dbus-kaco-http
+chmod +x /data/venus.dbus-kaco-http/service/run
+chmod +x /data/venus.dbus-kaco-http/service/log/run
 ```
 
 ### Configuration
 
-To configure the service (e.g. provide a fixed IP instead of
-the default MDNS name) edit `/data/venus.dbus-twc3/service/run`.
+To configure the service (e.g. change the IP or installation path)
+edit `/data/venus.dbus-kaco-http/service/run`.
 
 ### Start the service
 
 Finally activate the service
 ```
-ln -s /data/venus.dbus-twc3/service /service/venus.dbus-twc3
+ln -sf /data/venus.dbus-kaco-http/service /service/venus.dbus-kaco-http
 ```
-If you are on Venus OS 2.9+ this line needs to be added to
+Tis line needs to be added to
 [/data/rc.local](see https://www.victronenergy.com/live/ccgx:root_access)
-as well.
+as well to automatically start the service.
 
-Create the file if it does not exist.
+Create the rc.local file if it does not exist.
 
 
 ## Possible improvements
 
-- [ ] Allow for control of charging once Tesla adds an API for this.
+- [ ] Better documentation
+- [ ] Better energy tracking
